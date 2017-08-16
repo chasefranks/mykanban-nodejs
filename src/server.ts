@@ -7,7 +7,6 @@ import * as session from "express-session";
 import * as bodyParser from "body-parser";
 import * as logger from "morgan";
 import * as errorHandler from "errorhandler";
-import * as lusca from "lusca";
 import * as dotenv from "dotenv";
 import * as mongo from "connect-mongo";
 import * as flash from "express-flash";
@@ -60,8 +59,6 @@ mongoose.connection.on("error", () => {
  * Express configuration.
  */
 app.set("port", process.env.PORT || 3000);
-app.set("views", path.join(__dirname, "../views"));
-app.set("view engine", "pug");
 app.use(compression());
 app.use(logger("dev"));
 app.use(bodyParser.json());
@@ -79,12 +76,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use(lusca.xframe("SAMEORIGIN"));
-app.use(lusca.xssProtection(true));
+
+// some middleware...not sure if I need this
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user &&
@@ -99,7 +97,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(express.static(path.join(__dirname, "public"), { maxAge: 31557600000 }));
+// yeah, check...I seem to remember passport can be configured to do this automatically, but we're using jwt's anyway
 
 /**
  * Primary app routes.
