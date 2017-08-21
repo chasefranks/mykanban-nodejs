@@ -2,7 +2,7 @@ import { UserStory } from '../models/user-story'
 import { Label } from '../models/label'
 
 const userStories: UserStory[] = [
-  new UserStory('1', 'waat?', 'what is meaning of life?', 'ready-for-dev', undefined)
+  new UserStory('1', 'waat?', 'what is meaning of life?', 'ready-for-dev', [])
 ]
 
 export class UserStoryService {
